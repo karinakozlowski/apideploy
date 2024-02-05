@@ -8,22 +8,57 @@ from typing import List
 import pyarrow.parquet as pq
 import numpy as np  # Agregamos la importación de numpy
 import os
+
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
+
 # Creacion de una aplicacion FastApi
 
 app = FastAPI()
 
-# App de prueba 
-@app.get("/")
-def read_root():
-    return {
-        "Hola": "¡Bienvenido a mi Proyecto de MLOPS en Henry!",
-        "Te invito a": "Proyecto FastAPI - Sistema de Recomendaciones.",
-        "Autor_proyecto": {
-            "DataScientist": "Karina  Kozlowski",
-            "Mensaje": "Proyecto Individual N° 1 "
-        },
 
-    }
+
+#Presentación------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
+def read_root():
+    message = """
+        <head>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    </head>
+    <style>
+        .custom-text {
+            color: #333333;  /* Gris oscuro */
+            font-family: 'Roboto', sans-serif;  /* Utiliza la fuente Roboto o la que hayas elegido */
+        }
+    </style>
+    <div style="text-align: center; font-size: 24px; margin-bottom: 20px;" class="custom-text">
+        "Hola": "¡Bienvenido a mi Proyecto de MLOPS en Henry!"
+    </div>
+    <div style="text-align: center; font-size: 18px; margin-bottom: 40px;" class="custom-text">
+         "Te invito a": "Proyecto FastAPI - Sistema de Recomendaciones STEAM GAMES."(MVP)
+    </div>
+    <div style="text-align: center; font-size: 18px; margin-bottom: 20px;" class="custom-text">
+        "DataScientist": "Karina Kozlowski",
+    </div>
+    <div style="text-align: center; font-size: 18px; margin-bottom: 20px;" class="custom-text">
+        "Mensaje": "Proyecto Individual N° 1"
+    </div>    
+    <div style="text-align: center;">
+        <form action='/redirect' style="display: inline-block;">
+            <input type='submit' value='Ingrese a la API' style="font-size: 16px; background-color: orange; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+        </form>
+    </div>
+    """
+    return HTMLResponse(content=message)
+
+@app.get("/redirect", include_in_schema=False)
+def redirect_to_docs():
+    link = "https://proyectomlops-henry.onrender.com/docs"
+    raise HTTPException(status_code=302, detail="Redirecting", headers={"Location": link})
+
+
+
 
 # ejecutar uvicorn main:app --reload para cargar en el servidor
 
@@ -205,7 +240,7 @@ def user_for_genre(genre: str ):
                         INSTRUCCIONES<br>
                         1. Haga clik en "Try it out".<br>
                         2. Ingrese el año en el box abajo, ejemplo: 2015.<br>
-                        3. Scrollear a "Resposes" para ver la cantidad de dinero gastado por el usuario, el porcentaje de recomendación que realiza el usuario y cantidad de items que tiene el mismo.
+                        3. Scrollear a "Resposes" para ver los mejores developers.
                         </font>
                         """,
          tags=["Consultas Generales"])
@@ -247,7 +282,7 @@ def best_developer_year(year: int):
                         INSTRUCCIONES<br>
                         1. Haga clik en "Try it out".<br>
                         2. Ingrese el desarrollador en el box abajo, ejemplo: Valve.<br>
-                        3. Scrollear a "Resposes" para ver la cantidad de dinero gastado por el usuario, el porcentaje de recomendación que realiza el usuario y cantidad de items que tiene el mismo.
+                        3. Scrollear a "Resposes" para el analisis de sentimiento del desarrollador.
                         </font>
                         """,
          tags=["Consultas Generales"])
